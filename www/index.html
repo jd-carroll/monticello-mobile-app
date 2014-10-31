@@ -1,41 +1,113 @@
 <!DOCTYPE html>
 <!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
+  Copyright (c) 2014 Joseph Carroll.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Distribution License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/org/documents/edl-v10.php
 -->
 <html>
     <head>
         <meta charset="utf-8" />
+		<title>Monticello</title>
+		
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+		<meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        
+		<!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
+        
+		<!-- Application -->
+		<link rel="stylesheet" type="text/css" href="css/monticello.css" />
+        
+		<!-- Global App Variable -->
+		<script type="text/javascript">
+            var App;
+        </script>
+		
+		<!-- Famo.us -->
+		<link rel="stylesheet" type="text/css" href="src/famous/core/famous.css" />
+		<script type="text/javascript" src="src/famous/functionPrototypeBind.js"></script>
+        <script type="text/javascript" src="src/famous/classList.js"></script>
+        <script type="text/javascript" src="src/famous/requestAnimationFrame.js"></script>
+		
+		<!-- External Libraries -->
+		<script type="text/javascript" src="cordova.js"></script>
+
+
+        <script type="text/javascript">
+            var GLOBAL_onReady = false;
+
+            // Required scripts to add after deviceready
+            var require_scripts = [
+                {
+                    src: "src/lib/require.js",
+                    attr: [{
+                        "data-main" : "src/main"
+                    }]
+                }
+            ];
+
+            var addScripts = function(scripts){
+
+                // Add scripts
+                scripts.forEach(function(script_info){
+
+                    var script = document.createElement( 'script' );
+                    script.type = 'text/javascript';
+
+                    if(typeof(script_info) === 'string'){
+                        script.src = script_info;
+                    } else {
+                        script.src = script_info.src;
+                        if(script_info.attr){
+                            script_info.attr.forEach(function(scriptAttr){
+                                Object.keys(scriptAttr).forEach(function(key){
+                                    script.setAttribute(key, scriptAttr[key]);
+                                });
+                            });
+                        }
+                    }
+
+                    document.body.appendChild( script );
+
+                });
+            };
+
+            function onLoad() {
+
+                // browser?
+                if (!navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+                    // browser
+                    GLOBAL_onReady = true;
+                    addScripts(require_scripts);
+                } else {
+                    try {
+                        if(App === undefined){
+                            throw 'addScript';
+                        }
+                    }catch(err){
+                        // browser
+                        console.log('catch browser');
+                        GLOBAL_onReady = true;
+                        addScripts(require_scripts);
+                        return;
+                    }
+
+                    // wait for deviceready from cordova
+                    console.log('wait for deviceready from cordova');
+                    document.addEventListener("deviceready", function(){
+                        // alert('deviceready listener fired!');
+                        GLOBAL_onReady = true;
+                        addScripts(require_scripts);
+                    }, false);
+                }
+            }
+
+        </script>
     </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-    </body>
+    <body onload="onLoad()" style="background:#000;"></body>
 </html>
