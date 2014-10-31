@@ -1,17 +1,17 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
-        "file": "plugins/org.apache.cordova.device/www/device.js",
-        "id": "org.apache.cordova.device.device",
+        "file": "plugins/com.adobe.plugins.GAPlugin/www/GAPlugin.js",
+        "id": "com.adobe.plugins.GAPlugin.GAPlugin",
         "clobbers": [
-            "device"
+            "GAPlugin"
         ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "org.apache.cordova.device": "0.2.12"
+    "com.adobe.plugins.GAPlugin": "2.3.1"
 }
 // BOTTOM OF METADATA
 });
