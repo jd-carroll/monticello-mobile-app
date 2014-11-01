@@ -1,0 +1,11 @@
+{
+    "app": {
+        "name": "Monticello"
+    },
+    "footer" : {
+        "waiting" : "Home",
+        "messages" : "Messages",
+        "profiles" : "Profiles",
+        "friends" : "Friends"
+    }
+}

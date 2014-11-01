@@ -22,8 +22,10 @@
         
 		<!-- Application -->
 		<link rel="stylesheet" type="text/css" href="css/monticello.css" />
-        
-		<!-- Global App Variable -->
+
+        <script type="text/javascript" src="src/lib/require.js" data-main="src/main"></script>
+
+        <!-- Global App Variable -->
 		<script type="text/javascript">
             var App;
         </script>
@@ -35,7 +37,7 @@
         <script type="text/javascript" src="src/famous/requestAnimationFrame.js"></script>
 		
 		<!-- External Libraries -->
-		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="src/lib/cordova.js"></script>
 
 
         <script type="text/javascript">
@@ -43,12 +45,12 @@
 
             // Required scripts to add after deviceready
             var require_scripts = [
-                {
-                    src: "src/lib/require.js",
-                    attr: [{
-                        "data-main" : "src/main"
-                    }]
-                }
+//                {
+//                    src: "src/lib/require.js",
+//                    attr: [{
+//                        "data-main" : "src/main"
+//                    }]
+//                }
             ];
 
             var addScripts = function(scripts){
