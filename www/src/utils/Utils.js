@@ -51,15 +51,25 @@ define(function(require, exports, module) {
         }
     };
 
-    Utils.usePlane = function(plane_name, add, returnValue){
-        add = add || 0;
-        if(!App.UI.Planes[plane_name]){
-            // key doesn't exist, use 'content'
-            plane_name = 'content';
+    Utils.usePlane = function(layer, plane, add, returnValue){
+        var scale = add || 0;
+        if(!App.UI.Layers[layer]){
+            console.log("Layer: " + layer + "does not exist, using 'content'")
+            layer = 'content';
         }
+        scale += App.UI.Layers[layer];
+
+        if(plane && !App.UI.Planes[plane]){
+            console.log("Plane: " + plane + "does not exist, using 'content'")
+            plane = 'content';
+        } else if (!plane) {
+            plane = 'default';
+        }
+        scale += App.UI.Planes[plane];
+
         // console.log(App.Planes[plane_name] + add);
         // console.log(0.001 + (App.Planes[plane_name] + add)/1000000);
-        var value = 0.001 + (App.UI.Planes[plane_name] + add)/1000000;
+        var value = 0.001 + scale/1000000;
         if(returnValue){
             return value;
         }

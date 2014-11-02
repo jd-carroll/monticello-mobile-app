@@ -68,15 +68,21 @@ define(function(require, exports, module) {
         },
         UI: {
             fps: 10, // 10=hidden, frames-per-second counter
-            Planes: {
+            Layers: {
                 background: -1000000,
+                settings: 25000,
+                content: 50000,
+                details: 100000,
+                splashLoading: 1000000
+            },
+            Planes: {
+                default: 0,
                 content: 100,
                 contentTabs: 400,
                 header: 500,
                 footer: 500,
-                mainfooter: 500,
-                popover: 2000,
-                splashLoading: 2100
+                stories: 1000,
+                popover: 2000
             },
             Views: {
 
@@ -164,49 +170,50 @@ define(function(require, exports, module) {
         // App.Router = require('router')(App); // Passing "App" context to Router also
 
         // create the main context
-        App.MainContext = Engine.createContext();
-        App.MainContext.setPerspective(1000);
-        window.context = App.MainContext;
+        App.UI.Context = Engine.createContext();
+        App.UI.Context.setPerspective(1000);
+        // For the famous render tree debugger in chrome
+        //window.context = App.MainContext;
 
         // MainView
-        App.MainView = new View();
-        App.MainView.SizeMod = new StateModifier({
+        App.UI.MainView = new View();
+        App.UI.MainView.SizeMod = new StateModifier({
             size: [undefined, undefined]
         });
-        App.MainContext.add(App.MainView.SizeMod).add(App.MainView);
+        App.UI.MainContext.add(App.UI.MainView.SizeMod).add(App.UI.MainView);
 
         // Add main background image (pattern)
-        App.MainBackground = new Surface({
+        App.UI.Background = new Surface({
             size: [undefined, undefined],
             classes: ['overall-background']
         });
-        App.MainView.add(Utils.usePlane('background')).add(App.MainBackground);
-        
+        App.UI.MainView.add(Utils.usePlane('background')).add(App.UI.Background);
+
 //        // Create main Lightbox
-//        App.MainController = new Lightbox();
-//        App.MainController.getSize = function(){
+//        App.UI.MainController = new Lightbox();
+//        App.UI.MainController.getSize = function(){
 //            return [undefined, undefined];
 //        };
-//        App.MainController.resetOptions = function(){
+//        App.UI.MainController.resetOptions = function(){
 //            this.setOptions(Lightbox.DEFAULT_OPTIONS);
 //        };
-//
-//        App.defaultSize = [window.innerWidth, window.innerHeight]; // use Device Width/height via native plugin?
-//        // document.body.setAttribute('style',"width:"+window.innerWidth+"px;height:"+window.innerHeight+"px");
-//        // Utils.Notification.Toast(window.innerHeight);
-//        App.mainSize = [window.innerWidth, window.innerHeight];
-//        // Engine.nextTick(function() {
-//        //     console.log('After tick=' + App.MainContext.getSize());
-//        //     App.mainSize = App.MainContext.getSize();
-//        // });
-//
+
+        App.UI.defaultSize = [window.innerWidth, window.innerHeight]; // use Device Width/height via native plugin?
+        // document.body.setAttribute('style',"width:"+window.innerWidth+"px;height:"+window.innerHeight+"px");
+        // Utils.Notification.Toast(window.innerHeight);
+        App.UI.mainSize = [window.innerWidth, window.innerHeight];
+        // Engine.nextTick(function() {
+        //     console.log('After tick=' + App.MainContext.getSize());
+        //     App.mainSize = App.MainContext.getSize();
+        // });
+
 //        App.MainContext.on('resize', function(e) {
 //            // Utils.Notification.Toast('Resized');
 //            App.MainView.SizeMod.setSize(App.mainSize);
 //            // document.body.setAttribute('style',"height:"+App.mainSize[1]+"px");
 //        }.bind(this));
-//
-//
+
+
 //        // Layout for StatusBar / Controller
 //        if(App.Config.devicePlatform == 'ios'){
 //            App.StatusBar = true;
