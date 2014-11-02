@@ -38,8 +38,15 @@ define(function(require, exports, module) {
     var DeviceUtils =   require('../src/utils/DeviceUtils');
     var Utils =         require('utils');
 
-    var EventHandler =  require('../src/famous/core/EventHandler');
+    var EventHandler =  require('famous/core/EventHandler');
     var Engine =        require('famous/core/Engine');
+    var StateModifier = require('famous/modifiers/StateModifier');
+    var Surface =       require('famous/core/Surface');
+    var View =          require('famous/core/View');
+    var Easing =        require('famous/transitions/Easing');
+    var Transform =     require('famous/core/Transform');
+
+    var StandardTitleBar = require('views/common/StandardTitleBar');
 
     var $ = require('jquery-adapter');
     var _ = require('underscore');
@@ -58,6 +65,22 @@ define(function(require, exports, module) {
         Events: new EventHandler(),
         Preferences: {
 
+        },
+        UI: {
+            fps: 10, // 10=hidden, frames-per-second counter
+            Planes: {
+                background: -1000000,
+                content: 100,
+                contentTabs: 400,
+                header: 500,
+                footer: 500,
+                mainfooter: 500,
+                popover: 2000,
+                splashLoading: 2100
+            },
+            Views: {
+
+            }
         },
         shortName: "monticello"
     };
@@ -143,21 +166,23 @@ define(function(require, exports, module) {
         // create the main context
         App.MainContext = Engine.createContext();
         App.MainContext.setPerspective(1000);
-//
-//        // MainView
-//        App.MainView = new View();
-//        App.MainView.SizeMod = new StateModifier({
-//            size: [undefined, undefined]
-//        });
-//        App.MainContext.add(App.MainView.SizeMod).add(App.MainView);
-//
-//        // Add main background image (pattern)
-//        App.MainBackground = new Surface({
-//            size: [undefined, undefined],
-//            classes: ['overall-background']
-//        });
-//        App.MainView.add(Utils.usePlane('background')).add(App.MainBackground);
-//
+        window.context = App.MainContext;
+
+        // MainView
+        App.MainView = new View();
+        App.MainView.SizeMod = new StateModifier({
+            size: [undefined, undefined]
+        });
+        App.MainContext.add(App.MainView.SizeMod).add(App.MainView);
+
+        // Add main background image (pattern)
+        App.MainBackground = new Surface({
+            size: [undefined, undefined],
+            classes: ['overall-background']
+        });
+        App.MainView.add(Utils.usePlane('background')).add(App.MainBackground);
+
+        _createTitleArea();
 //        // Create main Lightbox
 //        App.MainController = new Lightbox();
 //        App.MainController.getSize = function(){
@@ -230,100 +255,7 @@ define(function(require, exports, module) {
 //        // - we want to effectively communicate to the user when we have lost or are experiencing a degraded internet connection
 //        // - todo...
 //
-//        // Main Footer
-//        var createMainFooter = function(){
-//            // var that = this;
-//            App.Views.MainFooter = new View();
-//
-//            // create the footer
-//            App.Views.MainFooter.Tabs = new StandardTabBar();
-//            var tmpTabs = App.Views.MainFooter.Tabs;
-//
-//            tmpTabs.defineSection('home', {
-//                content: '<i class="icon ion-home"></i><div><span class="ellipsis-all">'+App.t('footer.waiting')+'</span></div>',
-//                onClasses: ['footer-tabbar-default', 'on'],
-//                offClasses: ['footer-tabbar-default', 'off']
-//            });
-//            tmpTabs.defineSection('messages', {
-//                content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">'+App.t('footer.messages')+'</span></div>',
-//                onClasses: ['footer-tabbar-default', 'on'],
-//                offClasses: ['footer-tabbar-default', 'off']
-//            });
-//            tmpTabs.defineSection('profiles', {
-//                content: '<i class="icon ion-person"></i><div><span class="ellipsis-all">'+App.t('footer.profiles')+'</span></div>',
-//                onClasses: ['footer-tabbar-default', 'on'],
-//                offClasses: ['footer-tabbar-default', 'off']
-//            });
-//            tmpTabs.defineSection('friends', {
-//                content: '<i class="icon ion-android-friends"></i><div><span class="ellipsis-all">'+App.t('footer.friends')+'</span></div>',
-//                onClasses: ['footer-tabbar-default', 'on'],
-//                offClasses: ['footer-tabbar-default', 'off']
-//            });
-//
-//
-//
-//            tmpTabs.on('select', function(result, eventTriggered){
-//                console.error(eventTriggered);
-//                console.error(result);
-//                switch(result.id){
-//
-//                    case 'home':
-//                        App.history.navigate('user/waiting');
-//                        break;
-//
-//                    case 'profiles':
-//                        App.history.navigate('user',{history: false});
-//                        break;
-//
-//                    case 'messages':
-//                        App.history.navigate('inbox');
-//                        break;
-//
-//                    case 'friends':
-//                        App.history.navigate('friend/list');
-//                        break;
-//
-//                    default:
-//                        alert('none chosen');
-//                        break;
-//                }
-//            });
-//
-//
-//            // Attach header to the layout
-//            App.Views.MainFooter.originMod = new StateModifier({
-//                origin: [0, 1]
-//            });
-//            App.Views.MainFooter.positionMod = new StateModifier({
-//                transform: Transform.translate(0,60,0)
-//            });
-//            App.Views.MainFooter.sizeMod = new StateModifier({
-//                size: [undefined, 60]
-//            });
-//
-//            App.Views.MainFooter.add(App.Views.MainFooter.originMod).add(App.Views.MainFooter.positionMod).add(App.Views.MainFooter.sizeMod).add(App.Views.MainFooter.Tabs);
-//
-//            App.Views.MainFooter.show = function(transition){
-//                transition = transition || {
-//                    duration: 750,
-//                    curve: Easing.outExpo
-//                };
-//                App.Views.MainFooter.positionMod.setTransform(Transform.translate(0,0,0), transition);
-//            };
-//
-//            App.Views.MainFooter.hide = function(transition){
-//                transition = transition || {
-//                    duration: 250,
-//                    curve: Easing.inExpo
-//                };
-//                App.Views.MainFooter.positionMod.setTransform(Transform.translate(0,1000,0), transition);
-//            };
-//
-//            // Add to maincontext
-//            App.MainView.add(Utils.usePlane('mainfooter')).add(App.Views.MainFooter);
-//
-//        };
-//        createMainFooter();
+
 //
 //        // Splash Page (bloom loading)
 //        // - terminated by the
@@ -583,6 +515,102 @@ define(function(require, exports, module) {
 //        //     });
 //        // });
 //
+
+    };
+
+    // Main TitleBar
+    function _createTitleArea(){
+        // var that = this;
+        App.UI.Views.TitleBar = new View();
+
+        // create the footer
+        App.UI.Views.TitleBar.Title = new StandardTitleBar();
+        var tmpTitle= App.UI.Views.TitleBar.Title;
+
+        tmpTitle.addLeftElement('title', {
+            content: '<span>Monticello</span>'
+        });
+        tmpTitle.addRightElement('camera', {
+            content: '<i class="icon ion-camera"></i>'
+        });
+        //tmpTitle.defineSection('messages', {
+        //    content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">'+App.t('footer.messages')+'</span></div>',
+        //    onClasses: ['footer-tabbar-default', 'on'],
+        //    offClasses: ['footer-tabbar-default', 'off']
+        //});
+        //tmpTitle.defineSection('profiles', {
+        //    content: '<i class="icon ion-person"></i><div><span class="ellipsis-all">'+App.t('footer.profiles')+'</span></div>',
+        //    onClasses: ['footer-tabbar-default', 'on'],
+        //    offClasses: ['footer-tabbar-default', 'off']
+        //});
+        //tmpTitle.defineSection('friends', {
+        //    content: '<i class="icon ion-android-friends"></i><div><span class="ellipsis-all">'+App.t('footer.friends')+'</span></div>',
+        //    onClasses: ['footer-tabbar-default', 'on'],
+        //    offClasses: ['footer-tabbar-default', 'off']
+        //});
+
+
+
+        tmpTitle.on('select', function(result, eventTriggered){
+            console.error(eventTriggered);
+            console.error(result);
+            switch(result.id){
+
+                case 'home':
+                    App.history.navigate('user/waiting');
+                    break;
+
+                case 'profiles':
+                    App.history.navigate('user',{history: false});
+                    break;
+
+                case 'messages':
+                    App.history.navigate('inbox');
+                    break;
+
+                case 'friends':
+                    App.history.navigate('friend/list');
+                    break;
+
+                default:
+                    alert('none chosen');
+                    break;
+            }
+        });
+
+
+        // Attach header to the layout
+        App.UI.Views.TitleBar.originMod = new StateModifier({
+            align: [0, 0],
+            origin: [0, 0]
+        });
+        App.UI.Views.TitleBar.positionMod = new StateModifier({
+            transform: Transform.translate(0,60,0)
+        });
+        App.UI.Views.TitleBar.sizeMod = new StateModifier({
+            size: [undefined, 60]
+        });
+
+        App.UI.Views.TitleBar.add(App.UI.Views.TitleBar.originMod).add(App.UI.Views.TitleBar.positionMod).add(App.UI.Views.TitleBar.sizeMod).add(App.UI.Views.TitleBar.Title);
+
+        App.UI.Views.TitleBar.show = function(transition){
+            transition = transition || {
+                duration: 750,
+                curve: Easing.outExpo
+            };
+            App.UI.Views.TitleBar.positionMod.setTransform(Transform.translate(0,0,0), transition);
+        };
+
+        App.UI.Views.TitleBar.hide = function(transition){
+            transition = transition || {
+                duration: 250,
+                curve: Easing.inExpo
+            };
+            App.UI.Views.TitleBar.positionMod.setTransform(Transform.translate(0,1000,0), transition);
+        };
+
+        // Add to maincontext
+        App.MainView.add(Utils.usePlane('header')).add(App.UI.Views.TitleBar);
 
     };
 
