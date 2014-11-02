@@ -11,6 +11,9 @@ define(function(require, exports, module) {
     var Surface = require('famous/core/Surface');
     var View = require('famous/core/View');
     var Scene = require('famous/core/Scene');
+    var Transform = require('famous/core/Transform');
+
+    var padding = 10;
 
     /**
      * A view for displaying various title area elements,
@@ -29,7 +32,11 @@ define(function(require, exports, module) {
         this.definition = this.options.definition;
         this.layout = new Scene(this.definition);
         this.elements = [];
-        this._elementIds = {};
+        this.sections = {};
+
+        this.leftElements = [];
+        this.rightElements = [];
+        this.centerElements = [];
 
         //this._optionsManager.on('change', _updateOptions.bind(this));
 
@@ -40,7 +47,6 @@ define(function(require, exports, module) {
     StandardTitleBar.prototype.constructor = StandardTitleBar;
 
     StandardTitleBar.DEFAULT_OPTIONS = {
-        sections: [],
         size: [undefined, 50],
         direction: Utility.Direction.X,
         definition: {
@@ -92,43 +98,56 @@ define(function(require, exports, module) {
     }
 
     StandardTitleBar.prototype.addLeftElement = function(id, options) {
-
-        var targetDef = {
-            // transform: Transform.inFront,
-            origin: [0, 0.5],
-            target: element
-        };
-        var element = _createElement.call(this, id, options, targetDef);
-        if (this.options.elements) element.setOptions(this.options.elements);
-        element.setOptions(options);
+        internalAddElement.call(this, id, options, this.leftElements, function(padding, element) {
+            var targetDef = {
+                transform: Transform.translate(padding, 0 , 0),
+                origin: [0, 0],
+                align: [0, 0],
+                target: element
+            };
+            return targetDef;
+        }.bind(this));
     };
 
     StandardTitleBar.prototype.addRightElement = function(id, options) {
-
-        var targetDef = {
-            // transform: Transform.inFront,
-            origin: [1, 0.5],
-            align: [1, 0.5]
-        };
-        var element = _createElement.call(this, id, options, targetDef);
-        if (this.options.elements) element.setOptions(this.options.elements);
-        element.setOptions(options);
+        internalAddElement.call(this, id, options, this.rightElements, function(padding, element) {
+            var targetDef = {
+                transform: Transform.translate(-padding, 0 , 0),
+                origin: [1, 0.5],
+                align: [1, 0.5],
+                target: element
+            };
+            return targetDef;
+        }.bind(this));
     };
 
-    function _createElement(id, options, targetDef) {
+    function internalAddElement(id, options, existingElements, target) {
         var element;
-        var i = this._elementIds[id];
+        var _id = this.sections[id];
 
-        if (i === undefined) {
-            i = this.elements.length;
-            this._elementIds[id] = i;
+        if (_id === undefined) {
+            _id = this.elements.length;
+            this.sections[id] = _id;
+
+            var offset = padding;
+            for (var i in existingElements) {
+                var existingElement = this.elements[existingElements[i]];
+                offset += existingElement.getSize()[0] + padding;
+            }
+            existingElements.push(_id);
+
+            if (!options.size) {
+                // TODO: Revisit
+                options.size = [undefined, undefined];
+            }
             element = new Surface({
-                //size: [this.options.size[1], this.options.size[1],
+                size: [options.size[0], options.size[1]],
                 classes: options.classes,
                 content: options.content
             });
-            this.elements[i] = element;
-            targetDef.target = element;
+            this.elements[_id] = element;
+
+            var targetDef = target(offset, element);
             this.definition.target.push(targetDef);
             this.layout.load(this.definition);
 
@@ -137,10 +156,11 @@ define(function(require, exports, module) {
             }.bind(this));
         }
         else {
-            element = this.elements[this._elementIds[id]];
+            element = this.elements[this.sections[id]];
         }
 
-        return element;
+        if (this.options.elements) element.setOptions(this.options.elements);
+        element.setOptions(options);
     };
 
     module.exports = StandardTitleBar;

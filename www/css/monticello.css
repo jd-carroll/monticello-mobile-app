@@ -3,3 +3,14 @@
     background: #34495e;
     /*background: url('../img/zwartevilt.png') repeat;*/
 }
+
+.ion-white {
+    font-size: 30px;
+    color: white;
+}
+
+.header-title {
+    text-align: left;
+    line-height: 30px;
+    font-size: 20px;
+}

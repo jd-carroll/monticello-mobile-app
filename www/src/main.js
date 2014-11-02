@@ -181,8 +181,7 @@ define(function(require, exports, module) {
             classes: ['overall-background']
         });
         App.MainView.add(Utils.usePlane('background')).add(App.MainBackground);
-
-        _createTitleArea();
+        
 //        // Create main Lightbox
 //        App.MainController = new Lightbox();
 //        App.MainController.getSize = function(){
@@ -256,7 +255,8 @@ define(function(require, exports, module) {
 //        // - todo...
 //
 
-//
+        _createTitleArea();
+
 //        // Splash Page (bloom loading)
 //        // - terminated by the
 //        var createSplashLoading = function(){
@@ -527,29 +527,19 @@ define(function(require, exports, module) {
         App.UI.Views.TitleBar.Title = new StandardTitleBar();
         var tmpTitle= App.UI.Views.TitleBar.Title;
 
-        tmpTitle.addLeftElement('title', {
-            content: '<span>Monticello</span>'
-        });
         tmpTitle.addRightElement('camera', {
-            content: '<i class="icon ion-camera"></i>'
+            content: '<i class="icon ion-camera ion-white"></i>',
+            size: [30, 30]
         });
-        //tmpTitle.defineSection('messages', {
-        //    content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">'+App.t('footer.messages')+'</span></div>',
-        //    onClasses: ['footer-tabbar-default', 'on'],
-        //    offClasses: ['footer-tabbar-default', 'off']
-        //});
-        //tmpTitle.defineSection('profiles', {
-        //    content: '<i class="icon ion-person"></i><div><span class="ellipsis-all">'+App.t('footer.profiles')+'</span></div>',
-        //    onClasses: ['footer-tabbar-default', 'on'],
-        //    offClasses: ['footer-tabbar-default', 'off']
-        //});
-        //tmpTitle.defineSection('friends', {
-        //    content: '<i class="icon ion-android-friends"></i><div><span class="ellipsis-all">'+App.t('footer.friends')+'</span></div>',
-        //    onClasses: ['footer-tabbar-default', 'on'],
-        //    offClasses: ['footer-tabbar-default', 'off']
-        //});
+        tmpTitle.addLeftElement('title', {
+            content: '<span class="header-title">Monticello</span>',
+            size: [100, 30]
+        });
 
-
+        tmpTitle.addRightElement('globe', {
+            content: '<i class="icon ion-ios7-world ion-white"></i>',
+            size: [30, 30]
+        });
 
         tmpTitle.on('select', function(result, eventTriggered){
             console.error(eventTriggered);
@@ -578,20 +568,18 @@ define(function(require, exports, module) {
             }
         });
 
-
         // Attach header to the layout
         App.UI.Views.TitleBar.originMod = new StateModifier({
             align: [0, 0],
             origin: [0, 0]
         });
-        App.UI.Views.TitleBar.positionMod = new StateModifier({
-            transform: Transform.translate(0,60,0)
-        });
+        //App.UI.Views.TitleBar.positionMod = new StateModifier({
+        //    transform: Transform.translate(0,30,0)
+        //});
         App.UI.Views.TitleBar.sizeMod = new StateModifier({
-            size: [undefined, 60]
+            size: [undefined, 30]
         });
-
-        App.UI.Views.TitleBar.add(App.UI.Views.TitleBar.originMod).add(App.UI.Views.TitleBar.positionMod).add(App.UI.Views.TitleBar.sizeMod).add(App.UI.Views.TitleBar.Title);
+        App.UI.Views.TitleBar.add(App.UI.Views.TitleBar.originMod).add(App.UI.Views.TitleBar.sizeMod).add(App.UI.Views.TitleBar.Title);
 
         App.UI.Views.TitleBar.show = function(transition){
             transition = transition || {
@@ -611,7 +599,6 @@ define(function(require, exports, module) {
 
         // Add to maincontext
         App.MainView.add(Utils.usePlane('header')).add(App.UI.Views.TitleBar);
-
     };
 
 });
