@@ -54,13 +54,13 @@ define(function(require, exports, module) {
     Utils.usePlane = function(layer, plane, add, returnValue){
         var scale = add || 0;
         if(!App.UI.Layers[layer]){
-            console.log("Layer: " + layer + "does not exist, using 'content'")
+            console.log("Layer: " + layer + " does not exist, using 'content'");
             layer = 'content';
         }
         scale += App.UI.Layers[layer];
 
         if(plane && !App.UI.Planes[plane]){
-            console.log("Plane: " + plane + "does not exist, using 'content'")
+            console.log("Plane: " + plane + " does not exist, using 'content'");
             plane = 'content';
         } else if (!plane) {
             plane = 'default';
@@ -69,12 +69,13 @@ define(function(require, exports, module) {
 
         // console.log(App.Planes[plane_name] + add);
         // console.log(0.001 + (App.Planes[plane_name] + add)/1000000);
-        var value = 0.001 + scale/1000000;
+        var value = scale/1000000;
+        var z = 0.001 + value;
         if(returnValue){
-            return value;
+            return z;
         }
         return new StateModifier({
-            transform: Transform.translate(0,0, value)
+            transform: Transform.translate(0,0, z)
         });
     };
 

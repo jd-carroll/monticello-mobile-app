@@ -46,6 +46,8 @@ define(function(require, exports, module) {
     var Easing =        require('famous/transitions/Easing');
     var Transform =     require('famous/core/Transform');
 
+    var ExhibitStoryList = require('views/exhibits/ExhibitStoryList');
+    var GalleryTopicList = require('views/galleries/GalleryTopicList');
     var StandardTitleBar = require('views/common/StandardTitleBar');
 
     var $ = require('jquery-adapter');
@@ -180,7 +182,7 @@ define(function(require, exports, module) {
         App.UI.MainView.SizeMod = new StateModifier({
             size: [undefined, undefined]
         });
-        App.UI.MainContext.add(App.UI.MainView.SizeMod).add(App.UI.MainView);
+        App.UI.Context.add(App.UI.MainView.SizeMod).add(App.UI.MainView);
 
         // Add main background image (pattern)
         App.UI.Background = new Surface({
@@ -374,8 +376,8 @@ define(function(require, exports, module) {
 //
 //        };
 //        createSplashLoading();
-//
-//
+
+
 //        // Add ToastController to mainContext
 //        // - it should be a ViewSequence or something that allows multiple 'toasts' to be displayed at once, with animations)
 //        // - todo
@@ -521,7 +523,12 @@ define(function(require, exports, module) {
 //        //         body: "To activate your Waiting, please verify your email address by clicking the link in the email you should have received. "
 //        //     });
 //        // });
-//
+
+        App.UI.Views.Galleries = new GalleryTopicList();
+        App.UI.MainView.add(App.UI.Views.Galleries);
+
+        App.UI.Views.Stories = new ExhibitStoryList();
+        App.UI.MainView.add(Utils.usePlane('content', 'stories')).add(App.UI.Views.Stories);
 
     };
 
@@ -604,8 +611,8 @@ define(function(require, exports, module) {
             App.UI.Views.TitleBar.positionMod.setTransform(Transform.translate(0,1000,0), transition);
         };
 
-        // Add to maincontext
-        App.MainView.add(Utils.usePlane('header')).add(App.UI.Views.TitleBar);
+        // Add to main context
+        App.UI.MainView.add(Utils.usePlane('content', 'header')).add(App.UI.Views.TitleBar);
     };
 
 });
