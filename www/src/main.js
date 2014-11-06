@@ -525,7 +525,7 @@ define(function(require, exports, module) {
 //        // });
 
         App.UI.Views.Galleries = new GalleryTopicList();
-        App.UI.MainView.add(App.UI.Views.Galleries);
+        App.UI.MainView.add(Utils.usePlane('content', 'content')).add(App.UI.Views.Galleries);
 
         App.UI.Views.Stories = new ExhibitStoryList();
         App.UI.MainView.add(Utils.usePlane('content', 'stories')).add(App.UI.Views.Stories);
@@ -543,6 +543,7 @@ define(function(require, exports, module) {
 
         tmpTitle.addRightElement('camera', {
             content: '<i class="icon ion-camera ion-white"></i>',
+            classes: ['right-element'],
             size: [30, 30]
         });
         tmpTitle.addLeftElement('title', {
@@ -552,6 +553,7 @@ define(function(require, exports, module) {
 
         tmpTitle.addRightElement('globe', {
             content: '<i class="icon ion-ios7-world ion-white"></i>',
+            classes: ['right-element'],
             size: [30, 30]
         });
 
