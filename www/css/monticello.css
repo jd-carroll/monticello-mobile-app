@@ -13,16 +13,61 @@
     text-align: left;
     line-height: 30px;
     font-size: 20px;
+    font-family: Georgia,"Times New Roman",Times,serif;
+    color: white;
 }
 
 .exhibit-story {
-    background: #00ff00;
+    border: 2px solid;
+    border-radius: 5px;
+    background: white;
+
+}
+
+.exhibit-background {
+    box-shadow: -4px -4px 50px #272727;
+    background: black;
+    border-radius: 5px;
 }
 
 .right-element {
-    background: #3d9970;
+
 }
 
 .gallery-summary-photo {
 
+}
+
+img.gallery-summary-photo {
+    max-width: 100%;
+    max-height: 100%;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+img.gallery-summary-poto {
+    /* Set rules to fill background */
+
+    min-width: 640px;
+    min-height: 608px;
+
+    /* Set up proportionate scaling */
+    width: auto;
+    height: 60%;
+    -webkit-box-reflect: below;
+}
+
+@media screen and (min-aspect-ratio: 640/851.2) { /* Specific to this particular image */
+    img.gallery-summary-poto {
+        width: 100%;
+        height: auto;
+
+        /*left: 50%;
+        margin-left: -320px;   /* 50% */
+    }
 }

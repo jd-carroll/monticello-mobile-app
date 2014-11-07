@@ -7,6 +7,7 @@
 define(function(require, exports, module) {
     "use strict";
 
+    var RenderNode =    require('famous/core/RenderNode');
     var Surface =       require('famous/core/Surface');
     var Transform =     require('famous/core/Transform');
     var View =          require('famous/core/View');
@@ -58,18 +59,24 @@ define(function(require, exports, module) {
         // associate the model
         this.galleries = [];
         for (var t = 0; t < GalleryData.length; t++) {
-            var img = new Image;
+            var img = new Image();
             img.src = GalleryData[t].content;
+            img.className = 'gallery-summary-photo';
             img.style.webkitBoxReflect = 'below';
-            img.style.backgroundSize = '100px';
 
             var surface = new Surface({
-                classes: GalleryData[t].classes,
-                content: img
+                classes: GalleryData[t].classes
+                // TODO- Fix the image scaling / positioning
+                //content: img
             });
-
+            surface.PosMod = new StateModifier({
+                align: [0.5, 0],
+                origin: [0.5, 0]
+            });
+            var node = new RenderNode();
+            node.add(surface.PosMod).add(surface);
             //var i = new ImageSurface(GalleryData[t]);
-            this.galleries.push(surface)
+            this.galleries.push(node);
         }
         var galleryIndex = 0;
         this._lightbox.show(this.galleries[0]);

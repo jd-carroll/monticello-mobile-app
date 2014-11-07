@@ -524,8 +524,8 @@ define(function(require, exports, module) {
 //        //     });
 //        // });
 
-        App.UI.Views.Galleries = new GalleryTopicList();
-        App.UI.MainView.add(Utils.usePlane('content', 'content')).add(App.UI.Views.Galleries);
+        // App.UI.Views.Galleries = new GalleryTopicList();
+        // App.UI.MainView.add(Utils.usePlane('content', 'content')).add(App.UI.Views.Galleries);
 
         App.UI.Views.Stories = new ExhibitStoryList();
         App.UI.MainView.add(Utils.usePlane('content', 'stories')).add(App.UI.Views.Stories);

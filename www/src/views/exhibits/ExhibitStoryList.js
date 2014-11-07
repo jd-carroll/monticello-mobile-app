@@ -7,6 +7,7 @@
 define(function(require, exports, module) {
     "use strict";
 
+    var Surface =       require('famous/core/Surface');
     var Transform =     require('famous/core/Transform');
     var View =          require('famous/core/View');
     var StateModifier = require('famous/modifiers/StateModifier');
@@ -19,6 +20,19 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         var height = window.innerHeight * 0.55;
+
+
+        var backgroundSurface = new Surface({
+            classes: ['exhibit-background']
+        });
+        backgroundSurface.SizeMod = new StateModifier({
+            size: [undefined, height]
+        });
+        backgroundSurface.PosMod = new StateModifier({
+            transform: Transform.translate(4, height , 0)
+        });
+        this.add(backgroundSurface.PosMod).add(backgroundSurface.SizeMod).add(backgroundSurface);
+
         // create the listview
         this._scrollview = new Scrollview({
             direction: Utility.Direction.X
@@ -27,15 +41,16 @@ define(function(require, exports, module) {
             size: [undefined, height]
         });
         this._scrollview.PosMod = new StateModifier({
-            transform: Transform.translate(0, height , 0)
+            transform: Transform.translate(4, height , 0)
         });
         this.add(this._scrollview.PosMod).add(this._scrollview.SizeMod).add(this._scrollview);
 
         // get the model
         // create each gallery viewer
         this.galleries = [];
-        for (var i = 0; i < 1; i++) {
+        for (var i = 0; i < 10; i++) {
             this.galleries[i] = new ExhibitStory();
+            this.galleries[i].pipe(this._scrollview);
         }
         this._scrollview.sequenceFrom(this.galleries);
 
