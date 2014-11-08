@@ -31,7 +31,7 @@ define(function(require, exports, module) {
             transform: Transform.translate(0, 0, 0)
         });
         this.add(this._surface.SizeMod).add(this._surface);
-        this.pipe(this._surface);
+        this._surface.pipe(this._eventOutput);
     }
 
     ExhibitStory.prototype = Object.create(View.prototype);
