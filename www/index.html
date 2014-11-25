@@ -45,6 +45,7 @@
         <script type="text/javascript">
             var GLOBAL_onReady = false;
 
+            console.log('loading front script');
             // Required scripts to add after deviceready
             var require_scripts = [
 //                {
@@ -82,6 +83,7 @@
             };
 
             function onLoad() {
+                console.log('on load');
 
                 // browser?
                 if (!navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {

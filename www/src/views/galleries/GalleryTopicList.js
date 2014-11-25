@@ -13,7 +13,6 @@ define(function(require, exports, module) {
     var Utility =       require('famous/utilities/Utility');
     var Scrollview =    require('famous/views/Scrollview');
 
-    var PositionScrollview =    require('views/common/PositionScrollview');
     var GallerySummaryPhotos =  require('./GallerySummaryPhotos');
 
     function GalleryTopicList() {

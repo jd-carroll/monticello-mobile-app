@@ -16,7 +16,6 @@ define(function(require, exports, module) {
     var Timer =         require('famous/utilities/Timer');
     var Lightbox =      require('famous/views/Lightbox');
 
-    var PositionScrollview  = require('views/common/PositionScrollview');
     var Utils               = require('utils');
 
     var GalleryData = [
