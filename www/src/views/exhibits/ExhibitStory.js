@@ -21,7 +21,7 @@ define(function(require, exports, module) {
     function ExhibitStory(options) {
         View.apply(this, arguments);
 
-        this.aspect = window.innerWidth / window.innerHeight;
+        this.aspect = 2 / 3;
         this._surface = new Surface({
             classes: ['exhibit-story']
         });
