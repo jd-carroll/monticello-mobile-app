@@ -196,7 +196,7 @@ define(function(require, exports, module) {
 
     /**
      * Apply changes from this component to the corresponding document element.
-     * This includes changes to classes, styles, size, content, opacity, origin,
+     * This includes changes to classes, stylesheets, size, content, opacity, origin,
      * and matrix transforms.
      *
      * @private

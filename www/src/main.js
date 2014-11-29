@@ -46,9 +46,9 @@ define(function(require, exports, module) {
     var Easing =        require('famous/transitions/Easing');
     var Transform =     require('famous/core/Transform');
 
-    var ExhibitStoryList = require('views/exhibits/ExhibitStoryList');
-    var GalleryTopicList = require('views/galleries/GalleryTopicList');
-    var StandardTitleBar = require('views/common/StandardTitleBar');
+    var ExhibitStoryList =   require('views/exhibits/ExhibitStoryList');
+    var GallerySummaryList = require('views/galleries/GallerySummaryList');
+    var StandardTitleBar =   require('views/common/StandardTitleBar');
 
     var $ = require('jquery-adapter');
     var _ = require('underscore');
@@ -524,8 +524,8 @@ define(function(require, exports, module) {
 //        //     });
 //        // });
 
-        // App.UI.Views.Galleries = new GalleryTopicList();
-        // App.UI.MainView.add(Utils.usePlane('content', 'content')).add(App.UI.Views.Galleries);
+        App.UI.Views.Galleries = new GallerySummaryList();
+        App.UI.MainView.add(Utils.usePlane('content', 'content')).add(App.UI.Views.Galleries);
 
         App.UI.Views.Stories = new ExhibitStoryList();
         App.UI.MainView.add(Utils.usePlane('content', 'stories')).add(App.UI.Views.Stories);
@@ -546,10 +546,10 @@ define(function(require, exports, module) {
             classes: ['right-element'],
             size: [30, 30]
         });
-        tmpTitle.addLeftElement('title', {
-            content: '<span class="header-title">Monticello</span>',
-            size: [100, 30]
-        });
+        //tmpTitle.addLeftElement('title', {
+        //    content: '<span class="header-title">Monticello</span>',
+        //    size: [100, 30]
+        //});
 
         tmpTitle.addRightElement('globe', {
             content: '<i class="icon ion-ios7-world ion-white"></i>',

@@ -27,8 +27,12 @@ define(function(require, exports, module) {
         });
         this._surface.SizeMod = new Modifier({
             size: function() {
-                var height = this.getHeight();
-                var width = height * this.aspect;
+                var height = window.innerHeight,
+                    width = window.innerWidth;
+                if (!this.fullScreen) {
+                    var height = this.getHeight();
+                    var width = height * this.aspect;
+                }
                 return [width, height];
             }.bind(this)
         });
@@ -68,6 +72,10 @@ define(function(require, exports, module) {
             this._positionGetter = null;
             this.height = position;
         }
+    };
+
+    ExhibitStory.prototype.setFullScreen = function setFullScreen(fullScreen) {
+        this.fullScreen = fullScreen;
     };
 
     module.exports = ExhibitStory;

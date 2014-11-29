@@ -209,6 +209,7 @@ define(function(require, exports, module) {
             this._touchVelocity = 0;
 
             _handlePosition.call(this);
+            this._scrollview._earlyEnd = false;
 
             // restore the defaults
             this._updating = null;
@@ -249,11 +250,28 @@ define(function(require, exports, module) {
 
         var velocityFull = velocity[1] < 0;
 
+        var changedState;
+        var oldState;
         if ((positionFull && !velocitySwitch) || (velocitySwitch && velocityFull)) {
             _setSpring.call(this, SpringStates.FULL);
+            oldState = this.springState;
+            this.springState = SpringStates.FULL;
         }
         else {
             _setSpring.call(this, SpringStates.SCROLL);
+            oldState = this.springState;
+            this.springState = SpringStates.SCROLL;
+        }
+        if (oldState !== this.springState) {
+            for (var i = 0; i < this.galleries.length; i++) {
+                var gallery = this.galleries[i];
+                gallery.setFullScreen(this.springState === SpringStates.FULL);
+            }
+
+            // what about the case where we start full screen?
+            this._scrollview.setOptions({
+                paginated: this.springState === SpringStates.FULL
+            });
         }
     }
 
@@ -302,14 +320,14 @@ define(function(require, exports, module) {
         this._particle.setVelocity(velocity);
     };
 
-    ExhibitStoryList.prototype.render = function render() {
-        var pos = this.getPosition();
-        if (!this.lastPos || this.lastPos[0] != pos[0] || this.lastPos[1] != pos[1])
-            console.log(pos);
-
-        this.lastPos = pos;
-        return View.prototype.render.call(this, arguments);
-    };
+    //ExhibitStoryList.prototype.render = function render() {
+    //    var pos = this.getPosition();
+    //    if (!this.lastPos || this.lastPos[0] != pos[0] || this.lastPos[1] != pos[1])
+    //        console.log(pos);
+    //
+    //    this.lastPos = pos;
+    //    return View.prototype.render.call(this, arguments);
+    //};
 
     module.exports = ExhibitStoryList;
 });
