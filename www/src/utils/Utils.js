@@ -68,9 +68,8 @@ define(function(require, exports, module) {
         scale += App.UI.Planes[plane];
 
         // console.log(App.Planes[plane_name] + add);
-        // console.log(0.001 + (App.Planes[plane_name] + add)/1000000);
-        var value = scale/1000000;
-        var z = 0.001 + value;
+        // console.log(0.001 + (App.Planes[plane_name] + add)/100000000);
+        var z = scale/100000000;
         if(returnValue){
             return z;
         }

@@ -71,20 +71,24 @@ define(function(require, exports, module) {
         UI: {
             fps: 10, // 10=hidden, frames-per-second counter
             Layers: {
-                background: -1000000,
-                settings: 25000,
-                content: 50000,
-                details: 100000,
-                splashLoading: 1000000
+                background:  -100000000, // min value supported in utils
+                current:              0, // when layering sub-content within the same layer
+                settings:      10000000,
+                content:       30000000,
+                details:       50000000,
+                splashLoading: 99999999  // do not use with any plane
+                // front: 100000000      -- max value supported in utils
             },
             Planes: {
-                default: 0,
-                content: 100,
-                contentTabs: 400,
-                header: 500,
-                footer: 500,
-                stories: 1000,
-                popover: 2000
+                background:       0, // min value, plan base
+                subcontent:   25000,
+                default:     100000,
+                content:     300000,
+                contentTabs: 400000,
+                header:      500000,
+                footer:      500000,
+                stories:     800000,
+                popover:     999000  // Max value, do not want to enter next plane
             },
             Views: {
 
