@@ -7,6 +7,7 @@
 define(function(require, exports, module) {
     "use strict";
 
+    var Modifier =      require('famous/core/Modifier');
     var RenderNode =    require('famous/core/RenderNode');
     var Surface =       require('famous/core/Surface');
     var Transform =     require('famous/core/Transform');
@@ -15,22 +16,150 @@ define(function(require, exports, module) {
     var ImageSurface =  require('famous/surfaces/ImageSurface');
     var Timer =         require('famous/utilities/Timer');
     var Lightbox =      require('famous/views/Lightbox');
+    var RenderController = require('famous/views/RenderController');
+    var SequentialLayout = require('famous/views/SequentialLayout');
 
     var Utils               = require('utils');
 
-    function GallerySummary(summary) {
-        View.apply(this, arguments);
+    function GallerySummary(options, summary) {
+        View.apply(this, options);
 
-        var title = new Surface({
-            content: summary.title,
-            size: [undefined, undefined]
+        var self = this;
+
+        // Create title area content
+        this.Title = new Surface({
+            size: [true, true]
         });
-        this.add(title);
-        title.pipe(this._eventOutput);
+        this.Title.Controller = new RenderController();
+        this.updateTitle(summary.title);
+        // this.Title.pipe(this._eventOutput);
+
+        this.SubTitle = new Surface({
+            size: [true, true]
+        });
+        this.SubTitle.Controller = new RenderController();
+        this.updateSubTitle(summary.subtitle);
+        // this.SubTitle.pipe(this._eventOutput);
+
+        this.TitleLayout = new SequentialLayout({
+            direction: 1
+        });
+        this.TitleLayout.sequenceFrom([this.Title, this.SubTitle]);
+        var z = Utils.usePlane(20000, 0, 0, true);
+        this.TitleLayout.PosMod = new Modifier({
+            transform: Transform.translate(5, 4, z),
+            align: [0, 0],
+            origin: [0, 0]
+        });
+        this.add(this.TitleLayout.PosMod).add(this.TitleLayout);
+
+        // subtitle
+
+        // picture lightbox
+
+        // control behavior
+
+        // we want to capture all events on a generic "lowest" level surface to handle page related activities
+        this._eventContainer = new Surface();
+        z = Utils.usePlane(10000, 0, 0, true);
+        this._eventContainer.Mod = new Modifier({
+            size: [window.innerWidth, window.innerHeight],
+            transform: Transform.translate(0, 0, z)
+        });
+        this._eventContainer.pipe(this._eventOutput);
+        this.add(this._eventContainer.Mod).add(this._eventContainer);
+
+        this._eventOutput.on('click', function(event) {
+            console.log(event);
+        });
+
+        this.lightbox = new Lightbox({
+            inTransform: Transform.identity,
+            inOpacity: 0,
+            inOrigin: [.5, .5],
+            outTransform: Transform.identity,
+            outOpacity: 0,
+            outOrigin: [.5, .5],
+            showTransform: Transform.identity,
+            showOpacity: 1,
+            showOrigin: [.5, .5],
+            inTransition: {
+                duration: 1e3
+            },
+            outTransition: {
+                duration: 1e3
+            },
+            overlap: !0
+        });
+
+        if (summary.images) {
+            this.covers = [];
+            for (var t = 0; t < summary.images.length; t++) {
+                var surf = new Surface({
+                    content: '<div class="gallery-background-top" style="float:top;height:50%;background-image:url(' + summary.images[t] + ')"></div>' +
+                    '<div class="gallery-background-bottom" style="float:bottom;height:50%;background-image:url(' + summary.images[t] + ')"></div>'
+                });
+                this.covers.push(surf);
+            }
+            var coverIndex = 0;
+            this.lightbox.show(this.covers[0]);
+
+            Timer.setInterval(function () {
+                coverIndex++;
+                if (coverIndex === this.covers.length) coverIndex = 0;
+                this.lightbox.show(this.covers[coverIndex]);
+            }.bind(this), 12000);
+
+            var modifier = new StateModifier({
+                align: [0, 0],
+                origin: [0, 0]
+            });
+            this.add(modifier).add(this.lightbox);
+        }
     }
+
+    //function _createTitle(self) {
+    //    this.Title = new Surface({
+    //        size: [true, true]
+    //    });
+    //    this.Title.Controller = new RenderController();
+    //}
+
+    //function _createSubTitle(self) {
+    //    this.SubTitle = new Surface({
+    //        size: [true, true]
+    //    });
+    //    this.SubTitle.Controller = new RenderController();
+    //}
 
     GallerySummary.prototype = Object.create(View.prototype);
     GallerySummary.prototype.constructor = GallerySummary;
+
+    GallerySummary.prototype.updateTitle = function updateTitle(title) {
+        if (title) {
+            this.Title.Controller.show(this.Title);
+            this.Title.setContent('<span class="gallery-title">' + title + '</span>');
+        }
+        else {
+            this.Title.Controller.hide(this.Title);
+            this.Title.setContent(null);
+        }
+    };
+
+    GallerySummary.prototype.updateSubTitle = function updateSubTitle(subtitle) {
+        if (subtitle) {
+            this.SubTitle.Controller.show(this.SubTitle);
+            this.SubTitle.setContent('<span class="gallery-subtitle">' + subtitle + '</span>');
+        }
+        else {
+            this.SubTitle.Controller.hide(this.SubTitle);
+            this.SubTitle.setContent(null);
+        }
+    };
+
+    GallerySummary.prototype.getSize = function getSize() {
+        return [window.innerWidth, window.innerHeight];
+    };
 
     module.exports = GallerySummary;
 });

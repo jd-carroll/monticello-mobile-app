@@ -31,7 +31,7 @@ define(function(require, exports, module) {
             origin: [0, 0]
         });
         this._scrollview.SizeMod = new StateModifier({
-            size: [undefined, undefined]
+            size: [undefined, window.innerHeight]
         });
         this.add(this._scrollview.AlignMod)
             .add(this._scrollview.SizeMod)
@@ -42,16 +42,12 @@ define(function(require, exports, module) {
         this.galleries = [];
         for (var i = 0; i < summaries.summaries.length; i++) {
             var summary = summaries.summaries[i];
-            this.galleries[i] = new GallerySummary(summary);
+            this.galleries[i] = new GallerySummary({}, summary);
 
             this.galleries[i].pipe(this._scrollview);
             this._eventInput.subscribe(this.galleries[i]);
         }
         this._scrollview.sequenceFrom(this.galleries);
-
-        this._eventInput.on('touch', function(event) {
-            console.log(event);
-        });
     }
 
     GallerySummaryList.prototype = Object.create(View.prototype);

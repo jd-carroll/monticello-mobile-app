@@ -1,5 +1,15 @@
 { "summaries":[
-  {"title":"Orange"},
+  {
+    "title":"Orange",
+    "subtitle":"My Subtitle",
+    "images":[
+      "img/covers/countryside-640x480.png",
+      "img/covers/fighter-640x480.png",
+      "img/covers/rose-640x480.png",
+      "img/covers/square-640x480.png",
+      "img/covers/theater-640x480.png"
+    ]
+  },
   {"title":"The Roman Circuit"},
   {"title":"The Princes of Nassau Circuit"},
   {"title":"Monuments & Places of Interest"}

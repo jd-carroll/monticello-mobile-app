@@ -53,19 +53,29 @@ define(function(require, exports, module) {
 
     Utils.usePlane = function(layer, plane, add, returnValue){
         var scale = add || 0;
-        if(!App.UI.Layers[layer]){
-            console.log("Layer: " + layer + " does not exist, using 'content'");
-            layer = 'content';
+        if (typeof layer === 'number') {
+            scale += Math.abs(layer);
         }
-        scale += App.UI.Layers[layer];
+        else {
+            if (App.UI.Layers[layer] === undefined) {
+                console.error("Layer: " + layer + " does not exist, using 'content'");
+                layer = 'content';
+            }
+            scale += App.UI.Layers[layer];
+        }
 
-        if(plane && !App.UI.Planes[plane]){
-            console.log("Plane: " + plane + " does not exist, using 'content'");
-            plane = 'content';
-        } else if (!plane) {
-            plane = 'default';
+        if (typeof plane === 'number') {
+            scale += Math.abs(plane);
         }
-        scale += App.UI.Planes[plane];
+        else {
+            if (plane && App.UI.Planes[plane] === undefined) {
+                console.error("Plane: " + plane + " does not exist, using 'default'");
+                plane = 'default';
+            } else if (!plane) {
+                plane = 'default';
+            }
+            scale += App.UI.Planes[plane];
+        }
 
         // console.log(App.Planes[plane_name] + add);
         // console.log(0.001 + (App.Planes[plane_name] + add)/100000000);
