@@ -15,17 +15,69 @@ define(function(require, exports, module) {
     var ImageSurface =  require('famous/surfaces/ImageSurface');
     var Timer =         require('famous/utilities/Timer');
     var Lightbox =      require('famous/views/Lightbox');
+    var ContainerSurface = require('famous/surfaces/ContainerSurface');
 
     var Utils               = require('utils');
 
     function ExhibitStory(options) {
         View.apply(this, arguments);
 
-        this.aspect = 2 / 3;
-        this._surface = new Surface({
+        this.container = new ContainerSurface({
             classes: ['exhibit-story']
         });
-        this._surface.SizeMod = new Modifier({
+
+        this.aspect = 2 / 3;
+        if (!options.exhibit) {
+            this._surface = new Surface({
+                classes: ['exhibit-story'],
+                content: '<span class="empty"></span>' +
+                '<span class="empty-line1"></span>' +
+                '<span class="empty-line2"></span>' +
+                '<span class="empty-line3"></span>' +
+                '<span class="empty-line4"></span>' +
+                '<span class="empty-line5"></span>' +
+                '<span class="empty-line6"></span>'
+            });
+            this.container.add(this._surface);
+        }
+        else {
+            var offset = 10;
+            var exhibit = options.exhibit;
+            if (exhibit.profilePic) {
+                this._title = new Surface({
+                    classes: ['exhibit-title'],
+                    content: '<img src="' + exhibit.profilePic + '">'
+                });
+                this._title.PosMod = new StateModifier({
+                    transform: Transform.translate(10, offset, 0.001)
+                });
+                this.container.add(this._title.PosMod).add(this._title);
+                offset += 70;
+            }
+            if (exhibit.title) {
+                this._title = new Surface({
+                    classes: ['exhibit-title'],
+                    content: '<span>' + exhibit.title + '</span>'
+                });
+                this._title.PosMod = new StateModifier({
+                    transform: Transform.translate(10, offset, 0.001)
+                });
+                this.container.add(this._title.PosMod).add(this._title);
+                offset += 20;
+            }
+
+            //for (var i = 0; i < exhibit.content.length; i++) {
+            //    var contentSurface = new Surface({
+            //        content: exhibit.content[i]
+            //    });
+            //    contentSurface.PosMod = new StateModifier({
+            //        transform: Transform.translate(10, offset, 0.001)
+            //    });
+            //    this.container.add(contentSurface.PosMod).add(contentSurface);
+            //}
+        }
+
+        this.container.SizeMod = new Modifier({
             size: function() {
                 var height = window.innerHeight,
                     width = window.innerWidth;
@@ -36,8 +88,8 @@ define(function(require, exports, module) {
                 return [width, height];
             }.bind(this)
         });
-        this.add(this._surface.SizeMod).add(this._surface);
-        this._surface.pipe(this._eventOutput);
+        this.add(this.container.SizeMod).add(this.container);
+        this.container.pipe(this._eventOutput);
         this._size = null;
 
         if (options) this.setOptions(options);

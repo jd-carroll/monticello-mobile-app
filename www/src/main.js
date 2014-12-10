@@ -184,7 +184,7 @@ define(function(require, exports, module) {
         // MainView
         App.UI.MainView = new View();
         App.UI.MainView.SizeMod = new StateModifier({
-            size: [undefined, undefined]
+            size: [window.innerWidth, window.innerHeight]
         });
         App.UI.Context.add(App.UI.MainView.SizeMod).add(App.UI.MainView);
 
@@ -561,17 +561,48 @@ define(function(require, exports, module) {
             size: [30, 30]
         });
 
-        tmpTitle.on('select', function(result, eventTriggered){
+        tmpTitle.on('click', function(result, eventTriggered){
             console.error(eventTriggered);
             console.error(result);
             switch(result.id){
 
-                case 'home':
-                    App.history.navigate('user/waiting');
+                case 'camera':
+                    cordova.plugins.barcodeScanner.scan(
+                        function (result) {
+                            alert("We got a barcode\n" +
+                            "Result: " + result.text + "\n" +
+                            "Format: " + result.format + "\n" +
+                            "Cancelled: " + result.cancelled);
+                        },
+                        function (error) {
+                            alert("Scanning failed: " + error);
+                        }
+                    );
                     break;
 
-                case 'profiles':
-                    App.history.navigate('user',{history: false});
+                case 'globe':
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            var msg = 'Latitude: '    + position.coords.latitude          + '\n' +
+                                'Longitude: '         + position.coords.longitude         + '\n' +
+                                'Altitude: '          + position.coords.altitude          + '\n' +
+                                'Accuracy: '          + position.coords.accuracy          + '\n' +
+                                'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+                                'Heading: '           + position.coords.heading           + '\n' +
+                                'Speed: '             + position.coords.speed             + '\n' +
+                                'Timestamp: '         + position.timestamp                + '\n';
+                            alert(msg);
+                            console.log(msg);
+                        },
+                        function (error) {
+                            var msg = 'code: '    + error.code    + '\n' +
+                                'message: '       + error.message + '\n';
+                            alert(msg);
+                            console.error(msg);
+                        },
+                        {
+                            enableHighAccuracy: true
+                        });
                     break;
 
                 case 'messages':

@@ -18,6 +18,7 @@ define(function(require, exports, module) {
     var Lightbox =      require('famous/views/Lightbox');
     var RenderController = require('famous/views/RenderController');
     var SequentialLayout = require('famous/views/SequentialLayout');
+    var ContainerSurface = require('famous/surfaces/ContainerSurface');
 
     var Utils               = require('utils');
 
@@ -25,6 +26,8 @@ define(function(require, exports, module) {
         View.apply(this, options);
 
         var self = this;
+
+        this.container = new ContainerSurface();
 
         // Create title area content
         this.Title = new Surface({
@@ -51,27 +54,13 @@ define(function(require, exports, module) {
             align: [0, 0],
             origin: [0, 0]
         });
-        this.add(this.TitleLayout.PosMod).add(this.TitleLayout);
+        this.container.add(this.TitleLayout.PosMod).add(this.TitleLayout);
 
         // subtitle
 
         // picture lightbox
 
         // control behavior
-
-        // we want to capture all events on a generic "lowest" level surface to handle page related activities
-        this._eventContainer = new Surface();
-        z = Utils.usePlane(10000, 0, 0, true);
-        this._eventContainer.Mod = new Modifier({
-            size: [window.innerWidth, window.innerHeight],
-            transform: Transform.translate(0, 0, z)
-        });
-        this._eventContainer.pipe(this._eventOutput);
-        this.add(this._eventContainer.Mod).add(this._eventContainer);
-
-        this._eventOutput.on('click', function(event) {
-            console.log(event);
-        });
 
         this.lightbox = new Lightbox({
             inTransform: Transform.identity,
@@ -114,8 +103,17 @@ define(function(require, exports, module) {
                 align: [0, 0],
                 origin: [0, 0]
             });
-            this.add(modifier).add(this.lightbox);
+            this.container.add(modifier).add(this.lightbox);
         }
+
+        this.container.SizeMod = new StateModifier({
+            size: [window.innerWidth, window.innerHeight]
+        });
+        this.add(this.container.SizeMod).add(this.container);
+        this.container.pipe(this._eventOutput);
+        this._size = null;
+
+        if (options) this.setOptions(options);
     }
 
     //function _createTitle(self) {

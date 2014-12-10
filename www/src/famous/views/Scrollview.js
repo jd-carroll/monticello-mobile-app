@@ -205,6 +205,9 @@ define(function(require, exports, module) {
             else if (delta < -deltaLimit) delta = -deltaLimit;
         }
 
+        if (this.options.debug) {
+            console.error('Failed: ' + event);
+        }
         this.setPosition(this.getPosition() + delta);
         this._displacement += delta;
 

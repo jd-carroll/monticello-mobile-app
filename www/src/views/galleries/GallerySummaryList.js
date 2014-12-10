@@ -24,7 +24,8 @@ define(function(require, exports, module) {
         // create the listview
         this._scrollview = new Scrollview({
             direction: Utility.Direction.X,
-            paginated: true
+            paginated: true,
+            debug: true
         });
         this._scrollview.AlignMod = new StateModifier({
             align: [0, 0],

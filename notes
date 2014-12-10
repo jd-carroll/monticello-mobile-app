@@ -1,0 +1,69 @@
+- create 5 stories with alternating empty story
+ -- Profile story
+ -- > has profile picture with title
+ -- > 3 paragraph story
+ -- > link to external content
+ -- Photo story
+ -- > has profile picture with title
+ -- > 5 additional photos each with a caption
+ -- Profile Story
+ -- > same as first profile story but only 2 paragrahs
+ -- > one picture inbetween paragraphs
+ -- > No profile picture only title
+ -- Video Story
+ -- > Display some kind of video
+ -- > A sentence or two of a caption
+ -- Profile story
+ -- > same as the first
+
+- clickable camera
+ -- should open camera with barcode scanner
+
+- clickable map
+ -- should show native notification "coming soon"
+ -- should use native goelocation to display coordinates in message
+
+- setup App level lightbox with scrollview
+
+- clickable chat window
+ -- should open new chat window
+ -- mock a single response
+
+- barcode scanner should directly open story
+
+- minimal cleanup
+
+- PUBLISH ANDROID BUILD!!
+
+- Angular Conversion
+
+- PUBLISH ANDROID BUILD!!
+
+- Simple rest server to retrieve content
+
+- PUBLISH ANDROID BUILD!!
+
+- beautification
+
+- PUBLISH ANDROID/WIN/IOS BUILD!!!
+
+- hide the statusbar
+
+- scroll the gallery area
+ -- change background color
+ -- change title in top left
+ -- change color of all exhibit backgrounds
+
+Navigation:
+ - gallery changes
+ - full screen exhibit
+ - full screen exhibit changes
+ - (return from) camera
+ - (return form) map
+
+
+- clean up exhibit scrollview
+ -- make sure the same divs are reused
+ -- end scroll left background should follow
+ -- animate the width of the exhibit as you go to full screen
+ -- fix aspect as you pull back down

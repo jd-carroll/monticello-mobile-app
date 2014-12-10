@@ -77,7 +77,7 @@ define(function(require, exports, module) {
         this._height = this._heightPct * window.innerHeight; // window or view?
         this._displacement = [0, 0];
         this._touchVelocity = [0, 0];
-        this.setPosition([10, this._height]);
+        this.setPosition([0, this._height]);
 
         _createScrollview.call(this);
 
@@ -124,10 +124,25 @@ define(function(require, exports, module) {
             .add(this._scrollview.SizeMod)
             .add(this._scrollview);
 
+        var exhibits = JSON.parse(require('text!views/exhibits/ExhibitsModel.json'));
+
+
         // get the model
         // create each gallery viewer
         this.galleries = [];
-        for (var i = 0; i < 10; i++) {
+        var i = 0;
+        for (var i = 0; i < 100;) {
+            var exh = i % 5;
+            this.galleries[i] = new ExhibitStory({
+                height: this._height,
+                exhibit: exhibits[exh]
+            });
+            this.galleries[i].positionFrom(this.getPosition.bind(this));
+
+            this.galleries[i].pipe(this._scrollview);
+            this._eventInput.subscribe(this.galleries[i]);
+
+            i++;
             this.galleries[i] = new ExhibitStory({
                 height: this._height
             });
@@ -135,6 +150,7 @@ define(function(require, exports, module) {
 
             this.galleries[i].pipe(this._scrollview);
             this._eventInput.subscribe(this.galleries[i]);
+            i++;
         }
         this._scrollview.sequenceFrom(this.galleries);
     }
@@ -279,7 +295,7 @@ define(function(require, exports, module) {
         var springOptions;
         if (springState === SpringStates.SCROLL) {
             springOptions = {
-                anchor: [10, this._height, 0],
+                anchor: [0, this._height, 0],
                 period: this.options.scrollPeriod,
                 dampingRatio: this.options.scrollDamp
             };

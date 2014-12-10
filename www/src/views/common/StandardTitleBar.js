@@ -151,8 +151,10 @@ define(function(require, exports, module) {
             this.definition.target.push(targetDef);
             this.layout.load(this.definition);
 
-            element.on('click', function () {
-                this._eventOutput.emit(id, {});
+            element.on('click', function (event) {
+                this._eventOutput.emit(event.type, {
+                    id: id
+                });
             }.bind(this));
         }
         else {
